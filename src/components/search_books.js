@@ -48,6 +48,7 @@ class SearchBooks extends Component{
             } else{
                 if(this.state.results !== books){
                     this.setState({results: books});
+                    console.log(books);
                 }
                 this.setState({loader:"none", error: false});
             }
@@ -84,12 +85,12 @@ class SearchBooks extends Component{
                               imgurl={book.imageLinks === undefined ? "" : book.imageLinks.thumbnail}
                               title={book.title}
                               author={book.authors}
+                              shelf={book.shelf}
                         />
                     ))}
                 </ol>
-                {this.state.error && <p>No Results...</p>}
+                {this.state.error && <p>The Book you are searching for is not available</p>}
               </div>
-
             </div>
         )
     }
