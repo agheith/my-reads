@@ -14,21 +14,22 @@ class Book extends Component{
     addToShelf(book, shelf){
         BooksAPI.update(book, shelf)
           .then((books) => {
-              this.setState({shelf: shelf});
+            this.setState({shelf: shelf});
+        if(this.props.onResetShelf) {
+            this.props.onResetShelf();
+        }
         });
-        if(this.props.refreshResults) {
-        this.props.refreshResults(book, shelf);
-      }
     }
 
 
     render(){
         return(
-          <div key={this.props.id} className="book">
+          <div className="book">
             <div className="book-top">
               <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${this.props.imgurl})` }}></div>
+
               <div className="book-shelf-changer">
-                <select value={this.props.book.shelf} onChange={(event) => this.addToShelf(this.props.book, event.target.value)}>
+                <select value={this.state.shelf} onChange={(event) => this.addToShelf(this.props.book, event.target.value)}>
                     <option value="return" disabled>Move to...</option>
                     <option value="none">None</option>
                     <option value="currentlyReading">Currently Reading</option>
@@ -36,6 +37,7 @@ class Book extends Component{
                     <option value="read">Read</option>
                 </select>
               </div>
+
             </div>
             <div className="book-title">{this.props.title}</div>
             <div className="book-authors">{this.props.author}</div>

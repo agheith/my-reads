@@ -85,7 +85,6 @@ class SearchBooks extends Component{
                               imgurl={book.imageLinks === undefined ? "" : book.imageLinks.thumbnail}
                               title={book.title}
                               author={book.authors}
-                              shelf={book.shelf}
                         />
                     ))}
                 </ol>
