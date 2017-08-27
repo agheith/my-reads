@@ -10,6 +10,7 @@ class MainPage extends Component{
       this.state = {
         currently_reading:[],
         want_to_read:[],
+        already_read: []
       };
     }
 
@@ -19,10 +20,12 @@ class MainPage extends Component{
 
             let currently_reading = books.filter((book) => {return book.shelf === Shelfs.currentlyReading});
             let want_to_read = books.filter((book) => {return book.shelf === Shelfs.wantToRead});
+            let already_read = books.filter((book) => {return book.shelf === Shelfs.read});
 
             this.setState({
                 currently_reading: currently_reading,
                 want_to_read: want_to_read,
+                already_read: already_read
             })
         })
     }
@@ -73,6 +76,27 @@ class MainPage extends Component{
                         <div className="bookshelf-books">
                             <ol className="books-grid">
                             {this.state.want_to_read.length > 0 && this.state.want_to_read.map((book)=>(
+                                <Book key={book.id}
+                                      book={book}
+                                      imgurl={book.imageLinks.thumbnail}
+                                      title={book.title}
+                                      author={book.authors}
+                                      shelf={book.shelf}
+                                />
+                            ))}
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+              </div>
+
+              <div className="list-books-content">
+                <div>
+                    <div className="bookshelf">
+                        <h2 className="bookshelf-title">Already Read</h2>
+                        <div className="bookshelf-books">
+                            <ol className="books-grid">
+                            {this.state.already_read.length > 0 && this.state.already_read.map((book)=>(
                                 <Book key={book.id}
                                       onResetShelf={this.resetShelf.bind(this)}
                                       book={book}
