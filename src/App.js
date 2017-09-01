@@ -10,10 +10,14 @@ class App extends Component {
     return (
       <div className="app">
 
-        <Route exact path="/" component={MainPage} />
+        <Route exact path="/" render={() => (
+                <MainPage />
+            )} />
 
 
-        <Route path="/search" component={SearchBooks} />
+        <Route path="/search" render={() => (
+                <SearchBooks showMsg={this.showMsg}/>
+            )} />
 
       </div>
     );

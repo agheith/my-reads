@@ -8,7 +8,7 @@ class Book extends Component{
 
     super(props);
     this.state = {
-      value: "none"
+      shelf: props.shelf
     };
   }
 
@@ -16,7 +16,8 @@ class Book extends Component{
     addToShelf(book, shelf){
         BooksAPI.update(book, shelf)
           .then((books) => {
-            this.setState({value: shelf});
+            this.setState({shelf: shelf});
+            this.props.onShowMsg(shelf);
         if(this.props.onResetShelf) {
             this.props.onResetShelf();
         }
@@ -30,7 +31,7 @@ class Book extends Component{
               <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${this.props.imgurl})` }}></div>
 
               <div className="book-shelf-changer">
-                <select value={this.state.value} onChange={(event) => this.addToShelf(this.props.book, event.target.value)}>
+                <select value={this.props.book.shelf} onChange={(event) => this.addToShelf(this.props.book, event.target.value)}>
                     <option value="return" disabled>Move to...</option>
                     <option value="none">None</option>
                     <option value="currentlyReading">Currently Reading</option>

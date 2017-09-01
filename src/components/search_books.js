@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import * as BooksAPI from '../utils/BooksAPI';
 import { Link } from 'react-router-dom';
-import Book from './book'
+import Book from './book';
+import MsgBox from './msg_box';
 
 
 class SearchBooks extends Component{
@@ -16,6 +17,20 @@ class SearchBooks extends Component{
             loader: 'none'
         }
     }
+
+    showMsg(text){
+    this.setState({
+      popmsg: text,
+      popmsgdisplay: 'block'
+    }, () => {
+      setTimeout(() => {
+        this.setState({
+          popmsg: '',
+          popmsgdisplay: 'none'
+        });
+    } , 6000);
+    })
+  }
 
     updateQuery = (query) => {
         this.setState({query: query}, this.performSearch);
@@ -61,6 +76,8 @@ class SearchBooks extends Component{
         return(
             <div className="search_books">
 
+            <MsgBox display={this.state.popmsgdisplay} text={this.state.popmsg}/>
+
               <div className="search-books-bar">
 
                 <Link to="/" className="close-search" >Close</Link>
@@ -81,10 +98,12 @@ class SearchBooks extends Component{
                 <ol className="books-grid">
                     {this.state.results.length > 0 && this.state.results.map((book, index) => (
                         <Book key={book.id}
+
                               book={book}
                               imgurl={book.imageLinks === undefined ? "" : book.imageLinks.thumbnail}
                               title={book.title}
                               author={book.authors}
+                              onShowMsg={this.showMsg.bind(this)}
                         />
                     ))}
                 </ol>

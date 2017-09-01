@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import * as BooksAPI from '../utils/BooksAPI';
 import Shelfs from './shelfs';
 import Book from './book'
+import MsgBox from './msg_box';
 
 class MainPage extends Component{
     constructor(props) {
@@ -10,9 +11,25 @@ class MainPage extends Component{
       this.state = {
         currently_reading:[],
         want_to_read:[],
-        already_read: []
+        already_read: [],
+        popMsg: '',
+        msgDisplay: 'none',
       };
     }
+
+    showMsg(status){
+    this.setState({
+      popMsg: status,
+      msgDisplay: 'block'
+    }, () => {
+      setTimeout(() => {
+        this.setState({
+          popMsg: '',
+          msgDisplay: 'none'
+        });
+    } , 6000);
+    })
+  }
 
     getAllBooks(){
         BooksAPI.getAll().then((books)=>{
@@ -43,6 +60,8 @@ class MainPage extends Component{
         return(
             <div className="list-books">
 
+                <MsgBox display={this.state.msgDisplay} text={this.state.popMsg}/>
+
               <div className="list-books-title">
                 <h1>My Book Shelf</h1>
               </div>
@@ -56,6 +75,7 @@ class MainPage extends Component{
                             {this.state.currently_reading.length > 0 && this.state.currently_reading.map((book)=>(
                                 <Book key={book.id}
                                       onResetShelf={this.resetShelf.bind(this)}
+                                      onShowMsg={this.showMsg.bind(this)}
                                       book={book}
                                       imgurl={book.imageLinks.thumbnail}
                                       title={book.title}
@@ -78,6 +98,7 @@ class MainPage extends Component{
                             {this.state.want_to_read.length > 0 && this.state.want_to_read.map((book)=>(
                                 <Book key={book.id}
                                       book={book}
+                                      onShowMsg={this.showMsg.bind(this)}
                                       imgurl={book.imageLinks.thumbnail}
                                       title={book.title}
                                       author={book.authors}
@@ -99,6 +120,7 @@ class MainPage extends Component{
                             {this.state.already_read.length > 0 && this.state.already_read.map((book)=>(
                                 <Book key={book.id}
                                       onResetShelf={this.resetShelf.bind(this)}
+                                      onShowMsg={this.showMsg.bind(this)}
                                       book={book}
                                       imgurl={book.imageLinks.thumbnail}
                                       title={book.title}
