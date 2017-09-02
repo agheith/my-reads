@@ -3,58 +3,52 @@ import * as BooksAPI from '../utils/BooksAPI';
 import { Link } from 'react-router-dom';
 import Book from './book';
 import MsgBox from './msg_box';
+import _ from 'lodash';
 
 
 class SearchBooks extends Component{
     constructor(props){
         super(props);
         this.state = {
+            popMsg: '',
+            msgDisplay: 'none',
+            loader: 'none',
             query : '',
             results: [],
             error: false,
-            popmsg: '',
-            popmsgdisplay: 'none',
-            loader: 'none'
         }
     }
 
-    showMsg(text){
+    showMsg(status){
     this.setState({
-      popmsg: text,
-      popmsgdisplay: 'block'
+      popMsg: status,
+      msgDisplay: 'block'
     }, () => {
       setTimeout(() => {
         this.setState({
-          popmsg: '',
-          popmsgdisplay: 'none'
+          popMsg: '',
+          msgDisplay: 'none'
         });
-    } , 6000);
+    } , 4000);
     })
   }
 
-    updateQuery = (query) => {
-        this.setState({query: query}, this.performSearch);
-    }
 
-    clearQuery = (query) => {
-        this.setState({query: ''});
-    }
-
-    clearSearchResults = (query) => {
-        this.setState({results: []});
-    }
-
+    onInputChange = (query) => {
+            this.setState({ query }, this.performSearch);
+        }
 
     performSearch(){
-        if(this.state.query === '' || this.state.query === undefined){
+        if(this.state.query === ''){
             //Reset
             this.clearSearchResults();
             return;
         }
+        _.debounce((query) => { this.performSearch(query) }, 500)
         this.setState({ loader: "block"});
         BooksAPI.search(this.state.query.trim()).then((books) => {
             if(books.error && books.error === "empty query"){
-                // Bad Query, No Results
+                // No Results
                 this.setState({
                     loader: "none",
                     error: true,
@@ -70,13 +64,21 @@ class SearchBooks extends Component{
         })
         .catch((error) => console.log("error", error));
     }
+    
+    clearQuery = (query) => {
+        this.setState({query: ''});
+    }
 
+    clearSearchResults = (query) => {
+        this.setState({results: []});
+    }
 
     render(){
+
         return(
             <div className="search_books">
 
-            <MsgBox display={this.state.popmsgdisplay} text={this.state.popmsg}/>
+            <MsgBox display={this.state.msgDisplay} status={this.state.popMsg}/>
 
               <div className="search-books-bar">
 
@@ -85,7 +87,7 @@ class SearchBooks extends Component{
                   <input type="text"
                          placeholder="Search by title or author"
                          value={this.state.query}
-                         onChange={(event) => this.updateQuery(event.target.value)}
+                         onChange={(event) => this.onInputChange(event.target.value)}
                     />
                 </div>
 
@@ -93,21 +95,21 @@ class SearchBooks extends Component{
 
               <div className="search-books-results">
 
-                <img alt="loader " className="middle" style={{width: "175px", display: this.state.loader}} src={require("../img/loader.gif")} />
+                <img alt="loader " className="center" style={{width: "350px", display: this.state.loader}} src={require("../img/books.gif")} />
+                {this.state.error && <p>The Book you are searching for is not available</p>}
 
                 <ol className="books-grid">
-                    {this.state.results.length > 0 && this.state.results.map((book, index) => (
+                    {this.state.results.length > 0 && this.state.results.map((book) => (
                         <Book key={book.id}
 
                               book={book}
-                              imgurl={book.imageLinks === undefined ? "" : book.imageLinks.thumbnail}
+                              imgurl={book.imageLinks.thumbnail}
                               title={book.title}
                               author={book.authors}
                               onShowMsg={this.showMsg.bind(this)}
                         />
                     ))}
                 </ol>
-                {this.state.error && <p>The Book you are searching for is not available</p>}
               </div>
             </div>
         )

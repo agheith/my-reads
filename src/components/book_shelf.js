@@ -1,19 +1,30 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import * as BooksAPI from '../utils/BooksAPI';
-import Shelfs from './shelfs';
 import Book from './book'
 import MsgBox from './msg_box';
 
-class MainPage extends Component{
+
+class BookShelf extends Component{
     constructor(props) {
       super(props);
       this.state = {
+        popMsg: '',
+        msgDisplay: 'none',
         currently_reading:[],
         want_to_read:[],
         already_read: [],
-        popMsg: '',
-        msgDisplay: 'none',
+
+        Shelves:{
+            none: 'none',
+            currently_reading: "Currently Reading",
+            want_to_read: "Want to Read",
+            already_read: "Already Read",
+            currentlyReading: "currentlyReading",
+            wantToRead: "wantToRead",
+            read: "read"
+        }
+
       };
     }
 
@@ -27,17 +38,16 @@ class MainPage extends Component{
           popMsg: '',
           msgDisplay: 'none'
         });
-    } , 6000);
+    } , 4000);
     })
   }
 
     getAllBooks(){
         BooksAPI.getAll().then((books)=>{
             console.log(books);
-
-            let currently_reading = books.filter((book) => {return book.shelf === Shelfs.currentlyReading});
-            let want_to_read = books.filter((book) => {return book.shelf === Shelfs.wantToRead});
-            let already_read = books.filter((book) => {return book.shelf === Shelfs.read});
+            let currently_reading = books.filter((book) => {return book.shelf === this.state.Shelves.currentlyReading});
+            let want_to_read = books.filter((book) => {return book.shelf === this.state.Shelves.wantToRead});
+            let already_read = books.filter((book) => {return book.shelf === this.state.Shelves.read});
 
             this.setState({
                 currently_reading: currently_reading,
@@ -52,15 +62,16 @@ class MainPage extends Component{
     }
 
     componentDidMount() {
-        this.getAllBooks();
+      this.getAllBooks();
     }
 
 
     render(){
+
         return(
             <div className="list-books">
 
-                <MsgBox display={this.state.msgDisplay} text={this.state.popMsg}/>
+                <MsgBox display={this.state.msgDisplay} status={this.state.popMsg}/>
 
               <div className="list-books-title">
                 <h1>My Book Shelf</h1>
@@ -69,7 +80,7 @@ class MainPage extends Component{
               <div className="list-books-content">
                 <div>
                     <div className="bookshelf">
-                        <h2 className="bookshelf-title">Currently Reading</h2>
+                        <h2 className="bookshelf-title">{this.state.Shelves.currently_reading}</h2>
                         <div className="bookshelf-books">
                             <ol className="books-grid">
                             {this.state.currently_reading.length > 0 && this.state.currently_reading.map((book)=>(
@@ -92,11 +103,12 @@ class MainPage extends Component{
               <div className="list-books-content">
                 <div>
                     <div className="bookshelf">
-                        <h2 className="bookshelf-title">Want to read</h2>
+                        <h2 className="bookshelf-title">{this.state.Shelves.want_to_read}</h2>
                         <div className="bookshelf-books">
                             <ol className="books-grid">
                             {this.state.want_to_read.length > 0 && this.state.want_to_read.map((book)=>(
                                 <Book key={book.id}
+                                      onResetShelf={this.resetShelf.bind(this)}
                                       book={book}
                                       onShowMsg={this.showMsg.bind(this)}
                                       imgurl={book.imageLinks.thumbnail}
@@ -114,7 +126,7 @@ class MainPage extends Component{
               <div className="list-books-content">
                 <div>
                     <div className="bookshelf">
-                        <h2 className="bookshelf-title">Already Read</h2>
+                        <h2 className="bookshelf-title">{this.state.Shelves.already_read}</h2>
                         <div className="bookshelf-books">
                             <ol className="books-grid">
                             {this.state.already_read.length > 0 && this.state.already_read.map((book)=>(
@@ -143,4 +155,4 @@ class MainPage extends Component{
     }
 }
 
-export default MainPage;
+export default BookShelf;

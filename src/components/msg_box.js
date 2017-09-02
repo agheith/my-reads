@@ -5,9 +5,9 @@ class MsgBox extends Component {
 
   render() {
     return(
-      <div id="msg-popup-container" style={{display: this.props.display}}>
-        <div id="msg-box">
-          Book Added To: <strong><span id="msg-text">{this.props.text}</span></strong>!
+      <div className="msg-container" style={{display: this.props.display}}>
+        <div className="msg-box">
+          Book has been added To: <strong><span>{this.props.status}</span></strong>!
         </div>
       </div>
     )
