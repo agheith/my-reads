@@ -64,7 +64,7 @@ class SearchBooks extends Component{
         })
         .catch((error) => console.log("error", error));
     }
-    
+
     clearQuery = (query) => {
         this.setState({query: ''});
     }

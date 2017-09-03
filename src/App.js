@@ -14,14 +14,10 @@ class App extends Component {
     return (
       <div className="app">
 
-          <Route exact path="/" render={() => (
-              <BookShelf />
-              )} />
+          <Route exact path="/" component={BookShelf} />
 
 
-        <Route path="/search" render={() => (
-            <SearchBooks />
-            )} />
+          <Route path="/search" component={SearchBooks} />
 
       </div>
     );
