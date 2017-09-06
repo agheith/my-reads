@@ -103,7 +103,7 @@ class SearchBooks extends Component{
                         <Book key={book.id}
 
                               book={book}
-                              imgurl={book.imageLinks.thumbnail}
+                              imgurl={book.imageLinks === undefined ? "" : book.imageLinks.thumbnail}
                               title={book.title}
                               author={book.authors}
                               onShowMsg={this.showMsg.bind(this)}
