@@ -34,9 +34,6 @@ class SearchBooks extends Component{
   }
 
 
-    onInputChange = (query) => {
-            this.setState({ query }, this.performSearch);
-        }
 
     performSearch(){
         if(this.state.query === ''){
@@ -56,6 +53,7 @@ class SearchBooks extends Component{
                 });
             } else{
                 if(this.state.results !== books){
+                    books = this.onChangeShelf(books)
                     this.setState({results: books});
                     console.log(books);
                 }
@@ -65,12 +63,37 @@ class SearchBooks extends Component{
         .catch((error) => console.log("error", error));
     }
 
+
+  onChangeShelf = (books) => {
+    let Books = this.props.Books
+
+    books.forEach((book) => {
+        Books.forEach((fetchedBook) => {
+            if(fetchedBook.id === book.id){
+                book.shelf = fetchedBook.shelf
+            }
+        })
+    })
+
+    return books
+  }
+
+
+    onInputChange = (query) => {
+            this.setState({ query }, this.performSearch);
+        }
+
+
     clearQuery = (query) => {
         this.setState({query: ''});
     }
 
     clearSearchResults = (query) => {
         this.setState({results: []});
+    }
+
+    addBook = (book, shelf) => {
+      this.props.onUpdate(book, shelf)
     }
 
     render(){
@@ -107,6 +130,9 @@ class SearchBooks extends Component{
                               title={book.title}
                               author={book.authors}
                               onShowMsg={this.showMsg.bind(this)}
+                              onChange={(shelf) => {
+                                  this.addBook(book, shelf)
+                              }}
                         />
                     ))}
                 </ol>

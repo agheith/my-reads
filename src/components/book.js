@@ -1,27 +1,24 @@
 import React, { Component } from 'react';
-import * as BooksAPI from '../utils/BooksAPI';
-
 
 class Book extends Component{
 
-    addToShelf(book, shelf){
-        BooksAPI.update(book, shelf)
-          .then((books) => {
-            this.props.onShowMsg(shelf);
-            if(this.props.onResetShelf) {
-              this.props.onResetShelf();
-        }
-        });
+    onShelfChange = (event) => {
+      this.props.onChange(event.target.value)
     }
 
     render(){
+
+        let selectedBook = this.props.book;
+        let author = selectedBook.authors ? selectedBook.authors.join(' and ') : null;
+
         return(
           <div className="book">
             <div className="book-top">
-              <div className="book-cover" style={{ width: 120, height: 190, backgroundImage: `url(${this.props.imgurl})` }}></div>
+
+              <img className="book-cover" src={this.props.imgurl} alt={selectedBook.title} />
 
               <div className="book-shelf-changer">
-                <select value={this.props.shelf} onChange={(event) => this.addToShelf(this.props.book, event.target.value)}>
+                <select value={selectedBook.shelf} onChange={this.onShelfChange}>
                     <option value="return" disabled>Move to...</option>
                     <option value="none">None</option>
                     <option value="currentlyReading">Currently Reading</option>
@@ -32,7 +29,7 @@ class Book extends Component{
 
             </div>
             <div className="book-title">{this.props.title}</div>
-            <div className="book-authors">{this.props.author}</div>
+            <div className="book-authors">{author}</div>
           </div>
         )
     }
