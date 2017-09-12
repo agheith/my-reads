@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import * as BooksAPI from '../utils/BooksAPI';
 import { Link } from 'react-router-dom';
+import { PropTypes } from 'prop-types'
 import Book from './book';
 import MsgBox from './msg_box';
 import _ from 'lodash';
@@ -17,6 +18,11 @@ class SearchBooks extends Component{
             results: [],
             error: false,
         }
+    }
+
+    static propTypes = {
+      onUpdate: PropTypes.func.isRequired,
+      myBooks: PropTypes.array.isRequired
     }
 
     showMsg(status){
