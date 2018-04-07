@@ -25,7 +25,6 @@ class Book extends Component{
 
               <div className="book-shelf-changer">
                 <select value={selectedBook.shelf} onChange={this.onShelfChange}>
-                    Testing features
                     <option value="return" disabled>Move to...</option>
                     <option value="none">None</option>
                     <option value="currentlyReading">Currently Reading</option>
