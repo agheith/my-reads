@@ -11,7 +11,8 @@ const BookShelf = (props) => (
 
       <div className="list-books-title">
         <h1>My Book Shelf</h1>
-      <h1>Testing </h1>
+        <h1>Testing </h1>
+        <p>some text</p>
       </div>
 
       <div className="list-books-content">
